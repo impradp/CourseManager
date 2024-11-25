@@ -17,8 +17,8 @@ public class InstructorController {
     private InstructorService instructorService;
 
     @PostMapping
-    public Instructor saveInstructor(@Validated @RequestBody Instructor template)
+    public Instructor saveInstructor(@Validated @RequestBody Instructor instructor)
     {
-        return instructorService.save(template);
+        return instructorService.save(instructor);
     }
 }
