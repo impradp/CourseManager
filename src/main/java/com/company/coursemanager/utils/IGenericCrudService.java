@@ -32,9 +32,10 @@ public interface IGenericCrudService<T> {
     /**
      * Updates the entity
      *
+     * @param id The unique identifier of the entity
      * @param entity The entity object containing updated values
      */
-    String update(@NonNull T entity);
+    String update(long id, @NonNull T entity);
 
     /**
      * Delete the entity by id.
