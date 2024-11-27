@@ -6,14 +6,9 @@ import com.company.coursemanager.utils.RestHelper;
 import com.company.coursemanager.utils.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -25,12 +20,26 @@ public class InstructorController {
     private InstructorService instructorService;
 
     /**
+     * Fetch self info of the instructor
+     *
+     * @return The details of the authenticated user.
+     */
+    @GetMapping("/self")
+    @PreAuthorize("hasAuthority('INSTRUCTOR')")
+    public ResponseEntity<RestResponse> fetchSelfInfo() {
+        HashMap<String, Object> listHashMap = new HashMap<>();
+        listHashMap.put("instructor", instructorService.fetchSelfInfo());
+        return RestHelper.responseSuccess(listHashMap);
+    }
+
+    /**
      * Fetches the instructor by identifier.
      *
      * @param id The unique identifier of the instructor.
      * @return The instructor entity.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RestResponse> findById(@PathVariable long id) {
         HashMap<String, Object> listHashMap = new HashMap<>();
         listHashMap.put("instructor", instructorService.findById(id));
@@ -43,6 +52,7 @@ public class InstructorController {
      * @return The list of instructor entities.
      */
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RestResponse> findAll() {
         HashMap<String, Object> listHashMap = new HashMap<>();
         listHashMap.put("instructors", instructorService.findAll());
@@ -50,13 +60,13 @@ public class InstructorController {
     }
 
     /**
-     * Saves the new instructor entity.
+     * Signing up the new instructor.
      *
      * @param instructor The entity to be saved.
      * @return The saved entity.
      */
     @PostMapping
-    public ResponseEntity<RestResponse> save(@Validated Instructor instructor) {
+    public ResponseEntity<RestResponse> save(@Validated @RequestBody Instructor instructor) {
         HashMap<String, Object> listHashMap = new HashMap<>();
         listHashMap.put("instructor", instructorService.save(instructor));
         return RestHelper.responseSuccess(listHashMap);
@@ -69,19 +79,21 @@ public class InstructorController {
      * @return The message indicating the confirmation on updated instructor entity.
      */
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN','INSTRUCTOR')")
     public ResponseEntity<RestResponse> update(@PathVariable long id, @Validated Instructor instructor) {
         String message = instructorService.update(id, instructor);
         return RestHelper.responseMessage(message);
     }
 
     /**
-     * Deletes the instructor entity by id.
+     * Deletes the instructor by id.
      *
      * @param id The unique identifier of the entity.
      * @return The message indicating the confirmation on deleted instructor entity.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<RestResponse> update(@PathVariable long id) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<RestResponse> delete(@PathVariable long id) {
         String message = instructorService.deleteById(id);
         return RestHelper.responseMessage(message);
     }

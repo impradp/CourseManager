@@ -27,6 +27,7 @@ public interface IGlobalException {
      */
     default RestResponse setErrorResponse(Exception exception) {
         RestResponse restResponse = new RestResponse();
+        restResponse.setStatus(false);
         restResponse.setError(exception.getMessage());
         return restResponse;
     }

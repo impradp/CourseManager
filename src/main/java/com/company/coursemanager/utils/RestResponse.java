@@ -14,6 +14,7 @@ public class RestResponse {
     private String error;
     private String message;
     private String errorTrace;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> data = new HashMap<>();
 
     public void addPayload(String key, Object value) {

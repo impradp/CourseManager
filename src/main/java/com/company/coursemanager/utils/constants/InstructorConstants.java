@@ -7,5 +7,6 @@ public class InstructorConstants {
     public static final String INSTRUCTOR = "Instructor";
     public static final String UPDATED_SUCCESSFULLY_MESSAGE = "%s updated successfully.";
     public static final String DELETED_SUCCESSFULLY_MESSAGE = "%s deleted successfully.";
+    public static final String DUPLICATE_EMAIL_MESSAGE = "Email already exists.";
 
 }

@@ -1,12 +1,15 @@
 package com.company.coursemanager.instructor.model;
 
 import com.company.coursemanager.utils.AuditEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,5 +40,15 @@ public class Instructor extends AuditEntity {
     private boolean isFullTimer;
 
     private Long courseId;
+
+    @NotBlank(message = "Email is required and cannot be empty")
+    @Email(message = "Invalid email format")
+    @Column(unique = true)
+    private String email;
+
+    @NotBlank(message = "Password is required and cannot be empty")
+    private String password;
+
+    private String roles;
 
 }
