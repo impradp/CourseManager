@@ -25,7 +25,7 @@ public class InstructorController {
      * @return The details of the authenticated user.
      */
     @GetMapping("/self")
-    @PreAuthorize("hasAuthority('INSTRUCTOR')")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
     public ResponseEntity<RestResponse> fetchSelfInfo() {
         HashMap<String, Object> listHashMap = new HashMap<>();
         listHashMap.put("instructor", instructorService.fetchSelfInfo());
@@ -79,7 +79,7 @@ public class InstructorController {
      * @return The message indicating the confirmation on updated instructor entity.
      */
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN','INSTRUCTOR')")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
     public ResponseEntity<RestResponse> update(@PathVariable long id, @Validated Instructor instructor) {
         String message = instructorService.update(id, instructor);
         return RestHelper.responseMessage(message);
