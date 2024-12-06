@@ -1,6 +1,7 @@
 package com.company.coursemanager.instructor.controller;
 
 import com.company.coursemanager.instructor.model.Instructor;
+import com.company.coursemanager.instructor.model.InstructorDTO;
 import com.company.coursemanager.instructor.service.InstructorService;
 import com.company.coursemanager.utils.RestHelper;
 import com.company.coursemanager.utils.RestResponse;
@@ -80,8 +81,8 @@ public class InstructorController {
      */
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
-    public ResponseEntity<RestResponse> update(@PathVariable long id, @Validated Instructor instructor) {
-        String message = instructorService.update(id, instructor);
+    public ResponseEntity<RestResponse> update(@PathVariable long id, @Validated InstructorDTO instructorDTO) {
+        String message = instructorService.update(id, instructorDTO);
         return RestHelper.responseMessage(message);
     }
 

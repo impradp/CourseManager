@@ -8,6 +8,7 @@ import com.company.coursemanager.instructor.repository.InstructorRepository;
 import com.company.coursemanager.utils.exception.GlobalExceptionWrapper;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,14 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.company.coursemanager.utils.constants.InstructorConstants.DELETED_SUCCESSFULLY_MESSAGE;
-import static com.company.coursemanager.utils.constants.InstructorConstants.DUPLICATE_EMAIL_MESSAGE;
-import static com.company.coursemanager.utils.constants.InstructorConstants.INSTRUCTOR;
-import static com.company.coursemanager.utils.constants.InstructorConstants.NOT_FOUND_MESSAGE;
-import static com.company.coursemanager.utils.constants.InstructorConstants.UPDATED_SUCCESSFULLY_MESSAGE;
+import static com.company.coursemanager.utils.constants.InstructorConstants.*;
 
 @Service
-public class InstructorService implements IInstructorService{
+public class InstructorService implements IInstructorService {
 
     @Autowired
     private PasswordEncoder encoder;
@@ -55,16 +52,18 @@ public class InstructorService implements IInstructorService{
 
     @Override
     public InstructorDTO findById(long id) {
-         Instructor instructor = this.instructorRepository.findById(id).orElseThrow(
-                () -> new GlobalExceptionWrapper.NotFoundException(String.format(NOT_FOUND_MESSAGE, INSTRUCTOR.toLowerCase())));
-         return InstructorMapper.toDTO(instructor);
+        Instructor instructor = this.instructorRepository.findById(id).orElseThrow(
+                () -> new GlobalExceptionWrapper.NotFoundException(String.format(NOT_FOUND_MESSAGE,
+                        INSTRUCTOR.toLowerCase())));
+        return InstructorMapper.toDTO(instructor);
     }
 
     public InstructorDTO fetchSelfInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = ((UserInfoDetails) authentication.getPrincipal()).getUsername();
-        return  findByEmail(email).orElseThrow(
-                () -> new GlobalExceptionWrapper.NotFoundException(String.format(NOT_FOUND_MESSAGE, INSTRUCTOR.toLowerCase())));
+        return findByEmail(email).orElseThrow(
+                () -> new GlobalExceptionWrapper.NotFoundException(String.format(NOT_FOUND_MESSAGE,
+                        INSTRUCTOR.toLowerCase())));
     }
 
     public Optional<InstructorDTO> findByEmail(@NonNull String emailId) {
@@ -73,19 +72,28 @@ public class InstructorService implements IInstructorService{
     }
 
     @Override
-    public String update(long id, @NonNull Instructor entity) {
+    public String update(long id, @NonNull InstructorDTO instructorDTO) {
         InstructorDTO authenticatedUser = fetchSelfInfo();
         Instructor instructorEntity = InstructorMapper.toEntity(authenticatedUser);
 
         //Allow update by admin to the instructor info.
-        if(Arrays.stream(authenticatedUser.getRoles().split(",")).anyMatch(role -> role.trim().equalsIgnoreCase("ADMIN"))){
+        if (Arrays.stream(authenticatedUser.getRoles().split(",")).anyMatch(role -> role.trim().equalsIgnoreCase(
+                "ADMIN"))) {
             instructorEntity = InstructorMapper.toEntity(findById(id));
         }
 
-        instructorEntity.setCountry(entity.getCountry());
-        instructorEntity.setName(entity.getName());
-        instructorEntity.setAddress(entity.getAddress());
+        if (StringUtils.isNotBlank(instructorDTO.getCountry())) {
+            instructorEntity.setCountry(instructorDTO.getCountry());
+        }
 
+        if (StringUtils.isNotBlank(instructorDTO.getName())) {
+            instructorEntity.setName(instructorDTO.getName());
+        }
+
+        if (StringUtils.isNotBlank(instructorDTO.getAddress())) {
+            instructorEntity.setAddress(instructorDTO.getAddress());
+        }
+        
         this.instructorRepository.save(instructorEntity);
         return String.format(UPDATED_SUCCESSFULLY_MESSAGE, INSTRUCTOR);
     }
@@ -97,7 +105,8 @@ public class InstructorService implements IInstructorService{
         Instructor instructorEntity = InstructorMapper.toEntity(authenticatedUser);
 
         //Allow to delete by admin to the instructor info.
-        if(Arrays.stream(authenticatedUser.getRoles().split(",")).anyMatch(role -> role.trim().equalsIgnoreCase("ADMIN"))){
+        if (Arrays.stream(authenticatedUser.getRoles().split(",")).anyMatch(role -> role.trim().equalsIgnoreCase(
+                "ADMIN"))) {
             instructorEntity = InstructorMapper.toEntity(findById(id));
         }
 

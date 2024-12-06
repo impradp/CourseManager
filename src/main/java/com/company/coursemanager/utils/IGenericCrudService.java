@@ -4,7 +4,7 @@ import org.springframework.lang.NonNull;
 
 import java.util.List;
 
-public interface IGenericCrudService<T,E> {
+public interface IGenericCrudService<T, E> {
 
     /**
      * Fetches list of all entities
@@ -32,10 +32,10 @@ public interface IGenericCrudService<T,E> {
     /**
      * Updates the entity
      *
-     * @param id The unique identifier of the entity
+     * @param id     The unique identifier of the entity
      * @param entity The entity object containing updated values
      */
-    String update(long id, @NonNull T entity);
+    String update(long id, @NonNull E entity);
 
     /**
      * Delete the entity by id.
