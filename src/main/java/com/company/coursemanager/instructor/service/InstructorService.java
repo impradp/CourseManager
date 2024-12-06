@@ -51,14 +51,19 @@ public class InstructorService implements IInstructorService {
     }
 
     @Override
-    public InstructorDTO findById(long id) {
-        Instructor instructor = this.instructorRepository.findById(id).orElseThrow(
-                () -> new GlobalExceptionWrapper.NotFoundException(String.format(NOT_FOUND_MESSAGE,
-                        INSTRUCTOR.toLowerCase())));
+    public InstructorDTO fetchById(long id) {
+        Instructor instructor = findById(id);
         return InstructorMapper.toDTO(instructor);
     }
 
-    public InstructorDTO fetchSelfInfo() {
+    private Instructor findById(long id) {
+        return this.instructorRepository.findById(id).orElseThrow(
+                () -> new GlobalExceptionWrapper.NotFoundException(String.format(NOT_FOUND_MESSAGE,
+                        INSTRUCTOR.toLowerCase())));
+    }
+
+    @Override
+    public Instructor fetchSelfInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = ((UserInfoDetails) authentication.getPrincipal()).getUsername();
         return findByEmail(email).orElseThrow(
@@ -66,51 +71,48 @@ public class InstructorService implements IInstructorService {
                         INSTRUCTOR.toLowerCase())));
     }
 
-    public Optional<InstructorDTO> findByEmail(@NonNull String emailId) {
-        Optional<Instructor> instructor = this.instructorRepository.findByEmail(emailId);
-        return InstructorMapper.toDTO(instructor);
+    public Optional<Instructor> findByEmail(@NonNull String emailId) {
+        return this.instructorRepository.findByEmail(emailId);
     }
 
     @Override
     public String update(long id, @NonNull InstructorDTO instructorDTO) {
-        InstructorDTO authenticatedUser = fetchSelfInfo();
-        Instructor instructorEntity = InstructorMapper.toEntity(authenticatedUser);
+        Instructor authenticatedUser = fetchSelfInfo();
 
         //Allow update by admin to the instructor info.
         if (Arrays.stream(authenticatedUser.getRoles().split(",")).anyMatch(role -> role.trim().equalsIgnoreCase(
                 "ADMIN"))) {
-            instructorEntity = InstructorMapper.toEntity(findById(id));
+            authenticatedUser = findById(id);
         }
 
         if (StringUtils.isNotBlank(instructorDTO.getCountry())) {
-            instructorEntity.setCountry(instructorDTO.getCountry());
+            authenticatedUser.setCountry(instructorDTO.getCountry());
         }
 
         if (StringUtils.isNotBlank(instructorDTO.getName())) {
-            instructorEntity.setName(instructorDTO.getName());
+            authenticatedUser.setName(instructorDTO.getName());
         }
 
         if (StringUtils.isNotBlank(instructorDTO.getAddress())) {
-            instructorEntity.setAddress(instructorDTO.getAddress());
+            authenticatedUser.setAddress(instructorDTO.getAddress());
         }
-        
-        this.instructorRepository.save(instructorEntity);
+
+        this.instructorRepository.save(authenticatedUser);
         return String.format(UPDATED_SUCCESSFULLY_MESSAGE, INSTRUCTOR);
     }
 
     @Override
     @Transactional
     public String deleteById(long id) {
-        InstructorDTO authenticatedUser = fetchSelfInfo();
-        Instructor instructorEntity = InstructorMapper.toEntity(authenticatedUser);
+        Instructor authenticatedUser = fetchSelfInfo();
 
         //Allow to delete by admin to the instructor info.
         if (Arrays.stream(authenticatedUser.getRoles().split(",")).anyMatch(role -> role.trim().equalsIgnoreCase(
                 "ADMIN"))) {
-            instructorEntity = InstructorMapper.toEntity(findById(id));
+            authenticatedUser = findById(id);
         }
 
-        this.instructorRepository.deleteById(instructorEntity.getId());
+        this.instructorRepository.deleteById(authenticatedUser.getId());
         return String.format(DELETED_SUCCESSFULLY_MESSAGE, INSTRUCTOR);
     }
 

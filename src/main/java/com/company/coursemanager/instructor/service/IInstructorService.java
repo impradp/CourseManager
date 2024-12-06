@@ -11,6 +11,6 @@ public interface IInstructorService extends IGenericCrudService<Instructor, Inst
      *
      * @return The instructor dto
      */
-    InstructorDTO fetchSelfInfo();
+    Instructor fetchSelfInfo();
 }
 

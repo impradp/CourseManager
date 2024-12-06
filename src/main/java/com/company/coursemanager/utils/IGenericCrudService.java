@@ -27,7 +27,7 @@ public interface IGenericCrudService<T, E> {
      * @param id The unique identifier of the entity created
      * @return The entity object matching its id
      */
-    E findById(long id) throws Exception;
+    E fetchById(long id) throws Exception;
 
     /**
      * Updates the entity

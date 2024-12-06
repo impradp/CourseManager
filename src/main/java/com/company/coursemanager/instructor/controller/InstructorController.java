@@ -43,7 +43,7 @@ public class InstructorController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RestResponse> findById(@PathVariable long id) {
         HashMap<String, Object> listHashMap = new HashMap<>();
-        listHashMap.put("instructor", instructorService.findById(id));
+        listHashMap.put("instructor", instructorService.fetchById(id));
         return RestHelper.responseSuccess(listHashMap);
     }
 
@@ -76,12 +76,13 @@ public class InstructorController {
     /**
      * Updates the existing instructor entity.
      *
-     * @param instructor The updated instructor entity.
+     * @param instructorDTO The updated instructor dto.
      * @return The message indicating the confirmation on updated instructor entity.
      */
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
-    public ResponseEntity<RestResponse> update(@PathVariable long id, @Validated InstructorDTO instructorDTO) {
+    public ResponseEntity<RestResponse> update(@PathVariable long id,
+                                               @Validated @RequestBody InstructorDTO instructorDTO) {
         String message = instructorService.update(id, instructorDTO);
         return RestHelper.responseMessage(message);
     }
