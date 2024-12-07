@@ -9,11 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service
-public class LoginService {
+public class AuthenticationService {
 
     private UserInfoService service;
 
@@ -29,12 +30,15 @@ public class LoginService {
      * @param authRequest The user provided credentials.
      * @return The token on validating the user.
      */
-    public String authenticate(@NonNull AuthRequest authRequest){
+    public HashMap<String, String> authenticate(@NonNull AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
         );
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getEmail());
+            HashMap<String, String> tokenMap = new HashMap<>();
+            tokenMap.put("access_token", jwtService.generateToken(authRequest.getEmail()));
+            tokenMap.put("refresh_token", jwtService.generateRefreshToken(authRequest.getEmail()));
+            return tokenMap;
         } else {
             throw new GlobalExceptionWrapper.BadRequestException("Invalid Credentials.");
         }
