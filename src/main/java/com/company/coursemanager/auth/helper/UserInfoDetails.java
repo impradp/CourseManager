@@ -1,6 +1,6 @@
 package com.company.coursemanager.auth.helper;
 
-import com.company.coursemanager.instructor.model.Instructor;
+import com.company.coursemanager.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,16 +11,16 @@ import java.util.stream.Collectors;
 
 public class UserInfoDetails implements UserDetails {
 
-    private String email;
-    private String password;
-    private List<GrantedAuthority> authorities;
+    private final String email;
+    private final String password;
+    private final List<GrantedAuthority> authorities;
 
     /**
      * Initializes the parameterized constructor
      *
-     * @param userInfo The user info of the instructor
+     * @param userInfo The user info of the user
      */
-    public UserInfoDetails(Instructor userInfo) {
+    public UserInfoDetails(User userInfo) {
         this.email = userInfo.getEmail();
         this.password = userInfo.getPassword();
         this.authorities = List.of(userInfo.getRoles().split(","))

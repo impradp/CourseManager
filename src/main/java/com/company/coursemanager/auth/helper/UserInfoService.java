@@ -1,7 +1,7 @@
 package com.company.coursemanager.auth.helper;
 
-import com.company.coursemanager.instructor.model.Instructor;
-import com.company.coursemanager.instructor.repository.InstructorRepository;
+import com.company.coursemanager.users.model.User;
+import com.company.coursemanager.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,11 +14,11 @@ import java.util.Optional;
 public class UserInfoService implements UserDetailsService {
 
     @Autowired
-    private InstructorRepository instructorRepository;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Instructor> userDetail = instructorRepository.findByEmail(username); // Assuming 'email' is used as username
+        Optional<User> userDetail = userRepository.findByEmail(username); // Assuming 'email' is used as username
 
         // Converting UserInfo to UserDetails
         return userDetail.map(UserInfoDetails::new)

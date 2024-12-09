@@ -1,4 +1,4 @@
-package com.company.coursemanager.instructor.model;
+package com.company.coursemanager.users.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InstructorDTO {
+public class UserDTO {
     private long id;
     private String name;
     private String address;

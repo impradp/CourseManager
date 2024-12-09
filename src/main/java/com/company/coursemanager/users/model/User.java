@@ -1,7 +1,6 @@
-package com.company.coursemanager.instructor.model;
+package com.company.coursemanager.users.model;
 
 import com.company.coursemanager.utils.AuditEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,10 +23,10 @@ import org.hibernate.annotations.DynamicUpdate;
 @Data
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "instructor")
-public class Instructor extends AuditEntity {
+@Table(name = "users")
+public class User extends AuditEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "INSTRUCTOR_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQUENCE")
     private long id;
 
     private String name;
