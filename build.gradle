@@ -48,3 +48,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+bootJar {
+    // Ensure a consistent jar name
+    archiveFileName = 'course-manager-backend.jar'
+}
