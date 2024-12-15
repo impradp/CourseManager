@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -35,7 +36,7 @@ public class UserController {
     @GetMapping("/self")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public ResponseEntity<RestResponse> fetchSelf() {
-        HashMap<String, Object> listHashMap = new HashMap<>();
+        Map<String, Object> listHashMap = new HashMap<>();
         listHashMap.put("user", userService.fetchSelfInfo());
         return RestHelper.responseSuccess(listHashMap);
     }
@@ -49,7 +50,7 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RestResponse> findById(@PathVariable long id) {
-        HashMap<String, Object> listHashMap = new HashMap<>();
+        Map<String, Object> listHashMap = new HashMap<>();
         listHashMap.put("user", userService.fetchById(id));
         return RestHelper.responseSuccess(listHashMap);
     }
@@ -75,7 +76,7 @@ public class UserController {
      */
     @PostMapping
     public ResponseEntity<RestResponse> save(@Validated @RequestBody User user) {
-        HashMap<String, Object> listHashMap = new HashMap<>();
+        Map<String, Object> listHashMap = new HashMap<>();
         listHashMap.put("user", userService.save(user));
         return RestHelper.responseSuccess(listHashMap);
     }

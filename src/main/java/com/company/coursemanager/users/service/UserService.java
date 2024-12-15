@@ -67,12 +67,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User fetchSelfInfo() {
+    public UserDTO fetchSelfInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = ((UserInfoDetails) authentication.getPrincipal()).getUsername();
-        return findByEmail(email).orElseThrow(
+        User selectedUser = findByEmail(email).orElseThrow(
                 () -> new GlobalExceptionWrapper.NotFoundException(String.format(NOT_FOUND_MESSAGE,
                         USER.toLowerCase())));
+        return UserMapper.toDTO(selectedUser);
     }
 
     public Optional<User> findByEmail(@NonNull String emailId) {
@@ -81,12 +82,12 @@ public class UserService implements IUserService {
 
     @Override
     public String update(long id, @NonNull UserDTO userDTO) {
-        User authenticatedUser = fetchSelfInfo();
+        UserDTO authenticatedUser = fetchSelfInfo();
 
         //Allow update by admin to the user info.
         if (Arrays.stream(authenticatedUser.getRoles().split(",")).anyMatch(role -> role.trim().equalsIgnoreCase(
                 "ADMIN"))) {
-            authenticatedUser = findById(id);
+            authenticatedUser = UserMapper.toDTO(findById(id));
         }
 
         if (StringUtils.isNotBlank(userDTO.getCountry())) {
@@ -101,19 +102,19 @@ public class UserService implements IUserService {
             authenticatedUser.setAddress(userDTO.getAddress());
         }
 
-        this.userRepository.save(authenticatedUser);
+        this.userRepository.save(UserMapper.toEntity(authenticatedUser));
         return String.format(UPDATED_SUCCESSFULLY_MESSAGE, USER);
     }
 
     @Override
     @Transactional
     public String deleteById(long id) {
-        User authenticatedUser = fetchSelfInfo();
+        UserDTO authenticatedUser = fetchSelfInfo();
 
         //Allow to delete by admin to the user info.
         if (Arrays.stream(authenticatedUser.getRoles().split(",")).anyMatch(role -> role.trim().equalsIgnoreCase(
                 "ADMIN"))) {
-            authenticatedUser = findById(id);
+            authenticatedUser = UserMapper.toDTO(findById(id));
         }
 
         this.userRepository.deleteById(authenticatedUser.getId());
