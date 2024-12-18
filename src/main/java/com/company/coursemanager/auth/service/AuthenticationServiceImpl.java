@@ -4,7 +4,7 @@ import com.company.coursemanager.auth.helper.JwtService;
 import com.company.coursemanager.auth.helper.UserInfoService;
 import com.company.coursemanager.auth.model.AuthRequest;
 import com.company.coursemanager.users.model.User;
-import com.company.coursemanager.users.service.UserService;
+import com.company.coursemanager.users.service.UserServiceImpl;
 import com.company.coursemanager.utils.exception.GlobalExceptionWrapper;
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class AuthenticationService {
+public class AuthenticationServiceImpl {
 
     @Autowired
     private UserInfoService userInfoService;
@@ -27,7 +27,7 @@ public class AuthenticationService {
     private JwtService jwtService;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -39,7 +39,7 @@ public class AuthenticationService {
      * @return The token on validating the user.
      */
     public Map<String, String> authenticate(@NonNull AuthRequest authRequest) {
-        Optional<User> selectedUser = userService.findByEmail(authRequest.getEmail());
+        Optional<User> selectedUser = userServiceImpl.findByEmail(authRequest.getEmail());
         if (selectedUser.isEmpty() || !encoder.matches(authRequest.getPassword(), selectedUser.get().getPassword())) {
             throw new GlobalExceptionWrapper.NotFoundException("Invalid Credentials.");
         }

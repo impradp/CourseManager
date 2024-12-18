@@ -1,9 +1,9 @@
 package com.company.coursemanager.auth.controller;
 
 import com.company.coursemanager.auth.model.AuthRequest;
-import com.company.coursemanager.auth.service.AuthenticationService;
+import com.company.coursemanager.auth.service.AuthenticationServiceImpl;
 import com.company.coursemanager.users.model.User;
-import com.company.coursemanager.users.service.UserService;
+import com.company.coursemanager.users.service.UserServiceImpl;
 import com.company.coursemanager.utils.RestHelper;
 import com.company.coursemanager.utils.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,10 @@ import java.util.Map;
 public class AuthenticationController {
 
     @Autowired
-    private AuthenticationService loginService;
+    private AuthenticationServiceImpl loginService;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     /**
      * Handles the authentication for the user provided credentials.
@@ -64,7 +64,7 @@ public class AuthenticationController {
     @PostMapping("/sign-up")
     public ResponseEntity<RestResponse> save(@Validated @RequestBody User user) {
         Map<String, Object> listHashMap = new HashMap<>();
-        listHashMap.put("user", userService.save(user));
+        listHashMap.put("user", userServiceImpl.save(user));
         return RestHelper.responseSuccess(listHashMap);
     }
 }

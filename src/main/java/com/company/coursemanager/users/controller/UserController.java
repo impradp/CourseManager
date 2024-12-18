@@ -2,7 +2,7 @@ package com.company.coursemanager.users.controller;
 
 import com.company.coursemanager.users.model.User;
 import com.company.coursemanager.users.model.UserDTO;
-import com.company.coursemanager.users.service.UserService;
+import com.company.coursemanager.users.service.UserServiceImpl;
 import com.company.coursemanager.utils.RestHelper;
 import com.company.coursemanager.utils.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     /**
      * Fetch self info of the user
@@ -37,7 +37,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public ResponseEntity<RestResponse> fetchSelf() {
         Map<String, Object> listHashMap = new HashMap<>();
-        listHashMap.put("user", userService.fetchSelfInfo());
+        listHashMap.put("user", userServiceImpl.fetchSelfInfo());
         return RestHelper.responseSuccess(listHashMap);
     }
 
@@ -51,7 +51,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RestResponse> findById(@PathVariable long id) {
         Map<String, Object> listHashMap = new HashMap<>();
-        listHashMap.put("user", userService.fetchById(id));
+        listHashMap.put("user", userServiceImpl.fetchById(id));
         return RestHelper.responseSuccess(listHashMap);
     }
 
@@ -64,7 +64,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RestResponse> findAll() {
         HashMap<String, Object> listHashMap = new HashMap<>();
-        listHashMap.put("users", userService.findAll());
+        listHashMap.put("users", userServiceImpl.findAll());
         return RestHelper.responseSuccess(listHashMap);
     }
 
@@ -77,7 +77,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<RestResponse> save(@Validated @RequestBody User user) {
         Map<String, Object> listHashMap = new HashMap<>();
-        listHashMap.put("user", userService.save(user));
+        listHashMap.put("user", userServiceImpl.save(user));
         return RestHelper.responseSuccess(listHashMap);
     }
 
@@ -91,7 +91,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public ResponseEntity<RestResponse> update(@PathVariable long id,
                                                @Validated @RequestBody UserDTO userDTO) {
-        String message = userService.update(id, userDTO);
+        String message = userServiceImpl.update(id, userDTO);
         return RestHelper.responseMessage(message);
     }
 
@@ -104,7 +104,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RestResponse> delete(@PathVariable long id) {
-        String message = userService.deleteById(id);
+        String message = userServiceImpl.deleteById(id);
         return RestHelper.responseMessage(message);
     }
 }
