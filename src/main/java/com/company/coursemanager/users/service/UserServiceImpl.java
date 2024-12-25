@@ -102,7 +102,12 @@ public class UserServiceImpl implements UserService {
             authenticatedUser.setAddress(userDTO.getAddress());
         }
 
-        this.userRepository.save(UserMapper.toEntity(authenticatedUser));
+        return updateEntity(UserMapper.toEntity(authenticatedUser));
+    }
+
+    @Override
+    public String updateEntity(User user) {
+        this.userRepository.save(user);
         return String.format(UPDATED_SUCCESSFULLY_MESSAGE, USER);
     }
 
