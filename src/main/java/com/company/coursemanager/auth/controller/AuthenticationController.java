@@ -9,6 +9,7 @@ import com.company.coursemanager.users.model.User;
 import com.company.coursemanager.users.service.UserService;
 import com.company.coursemanager.utils.RestHelper;
 import com.company.coursemanager.utils.RestResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Tag(name = "Authentication")
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
 

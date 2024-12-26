@@ -5,6 +5,7 @@ import com.company.coursemanager.users.model.UserDTO;
 import com.company.coursemanager.users.service.UserServiceImpl;
 import com.company.coursemanager.utils.RestHelper;
 import com.company.coursemanager.utils.RestResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Tag(name = "User Management")
 @RequestMapping("/api/v1/users")
 public class UserController {
 
