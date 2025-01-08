@@ -1,6 +1,7 @@
 package com.company.coursemanager.users.service;
 
 import com.company.coursemanager.auth.helper.UserInfoDetails;
+import com.company.coursemanager.file.service.FileServiceImpl;
 import com.company.coursemanager.users.mapper.UserMapper;
 import com.company.coursemanager.users.model.User;
 import com.company.coursemanager.users.model.UserDTO;
@@ -8,12 +9,13 @@ import com.company.coursemanager.users.repository.UserRepository;
 import com.company.coursemanager.utils.exception.GlobalExceptionWrapper;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3 .StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FileServiceImpl fileServiceImpl;
 
     @Override
     public List<UserDTO> findAll() {
@@ -124,6 +129,23 @@ public class UserServiceImpl implements UserService {
 
         this.userRepository.deleteById(authenticatedUser.getId());
         return String.format(DELETED_SUCCESSFULLY_MESSAGE, USER);
+    }
+
+    public UserDTO updateProfileImage(MultipartFile file) {
+        // Get current user (implement according to your security context)
+        UserDTO currentUser = fetchSelfInfo();
+
+        // Delete old profile image if exists
+        if (currentUser.getAvatar() != null) {
+            fileServiceImpl.deleteFile(currentUser.getAvatar());
+        }
+
+        // Store new file and update user
+        String fileName = fileServiceImpl.store(file,currentUser.getId());
+        currentUser.setAvatar(fileName);
+
+        User savedUser = userRepository.save(UserMapper.toEntity(currentUser));
+        return UserMapper.toDTO(savedUser);
     }
 
 }

@@ -16,4 +16,5 @@ public class UserDTO {
     private Long courseId;
     private String email;
     private String roles;
+    private String avatar;
 }

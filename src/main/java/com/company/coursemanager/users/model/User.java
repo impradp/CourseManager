@@ -50,4 +50,6 @@ public class User extends AuditEntity {
 
     private String roles;
 
+    private String avatar;
+
 }

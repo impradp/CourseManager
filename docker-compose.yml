@@ -34,7 +34,7 @@ services:
       - JWT_ACCESS_TOKEN_EXPIRATION=300000
       - JWT_REFRESH_TOKEN_EXPIRATION=604800000
       # CORS configurations
-      - CORS_ORIGIN_URL=${CORS_ORIGIN_URL}
+      - CORS_ORIGINURL=${CORS_ORIGIN_URL}
 
   # MySQL Database Service
   # Configures the database container
