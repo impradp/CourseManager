@@ -1,0 +1,51 @@
+# Configuration for Dependabot version updates
+version: 2
+updates:
+  # Gradle dependencies
+  - package-ecosystem: 'gradle'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+      time: '09:00'
+      timezone: 'UTC'
+    groups:
+      # Group Spring Boot related updates together
+      spring-packages:
+        patterns:
+          - 'org.springframework.boot:*'
+          - 'io.spring.*'
+      # Group testing related updates
+      test-packages:
+        patterns:
+          - 'org.junit.*'
+          - 'org.mockito:*'
+      # Group JWT related updates
+      jwt-packages:
+        patterns:
+          - 'io.jsonwebtoken:*'
+      # Group OpenAPI related updates
+      openapi-packages:
+        patterns:
+          - 'org.springdoc:*'
+    labels:
+      - 'dependencies'
+      - 'gradle'
+    commit-message:
+      prefix: 'deps'
+      prefix-development: 'chore'
+      include: 'scope'
+    open-pull-requests-limit: 10
+
+  # GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+      time: '09:00'
+      timezone: 'UTC'
+    labels:
+      - 'dependencies'
+      - 'github-actions'
+    commit-message:
+      prefix: 'ci'
+      include: 'scope'
