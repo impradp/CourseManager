@@ -8,8 +8,9 @@ on:
       - dev
       - qa
       - uat
+  pull_request_review:
+    types: [submitted, dismissed]
 
-# Global environment variables for configuration and logging
 env:
   WORKFLOW_DEBUG: 'true'
 
